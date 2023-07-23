@@ -7,14 +7,15 @@ import {
   DeleteCategory,
   UpdateCategory,
 } from "../controllers/CategoryControllers";
+import { Protected, roles } from "../controllers/AuthControllers";
 const router = Router({ mergeParams: true });
-router.route("/").post(CreateCategory).get(GetAll);
+router.route("/").post(Protected, roles("ADMIN"), CreateCategory).get(GetAll);
 
 router
   .route("/:id")
   .get(GetCategory)
-  .delete(DeleteCategory)
-  .put(UpdateCategory);
+  .delete(Protected, roles("ADMIN"), DeleteCategory)
+  .put(Protected, roles("ADMIN"), UpdateCategory);
 router.route("/:categoryid/books").get(getbooksbycatagory);
 
 export { router };

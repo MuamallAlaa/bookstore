@@ -9,10 +9,15 @@ import {
   UpdateBook,
   Search,
 } from "../controllers/BookConrollers";
-router.route("/").post(CreateBook).get(GetAll);
+import { Protected, roles } from "../controllers/AuthControllers";
+router.route("/").post(Protected, roles("ADMIN"), CreateBook).get(GetAll);
 router.route("/search").get(Search);
 
-router.route("/:id").get(GetBook).delete(DeleteBook).put(UpdateBook);
+router
+  .route("/:id")
+  .get(GetBook)
+  .delete(Protected, roles("ADMIN"), DeleteBook)
+  .put(Protected, roles("ADMIN"), UpdateBook);
 
 router.use("/:bookid/category", CategoryRoutes);
 
